@@ -17,15 +17,22 @@ import matplotlib.pyplot as plt
 
 
 def new_figure () :
-    fig = plt.figure(figsize=(40,40))
+    fig = plt.figure(figsize=(10,10))
     ax = plt.axes(projection='3d')
-    ax.set_xlabel('X', size=40)
-    ax.set_ylabel('Y', size=40)
-    ax.set_zlabel('Z', size=40)
+    ax.set_facecolor((0, 0, 0))
+    #ax.set_xlabel('X', size=40)
+    #ax.set_ylabel('Y', size=40)
+    #ax.set_zlabel('Z', size=40)
     ax.set_xlim3d(-2, 1.2)
     ax.set_ylim3d(1, 7)
     ax.set_zlim3d(0, 1.7)
+    # ax.set_xticks=[]
+    # ax.set_yticks=[]
+    # ax.set_zticks=[]
+    #ax.set_visible=False
+    ax.set_axis_off()
     return fig, ax
+
 
 
 # In[61]:
@@ -67,8 +74,8 @@ def plot_all_sensors_with_numbers (data,ax):
         x=data.loc[:,sensor_name][0]
         y=data.loc[:,sensor_name][1]
         z=data.loc[:,sensor_name][2]
-        ax.scatter(x,y,z,s=200, marker='d', color="g")
-        ax.text(x,y,z, '%s''%s' % ('  ',i+1), size=15, zorder=1,)
+        ax.scatter(x,y,z,s=50, marker='d', color="g")
+        #ax.text(x,y,z, '%s''%s' % ('  ',i+1), size=15, zorder=1,)
 
 
 # In[64]:
@@ -76,7 +83,7 @@ def plot_all_sensors_with_numbers (data,ax):
 
 def plot_all_segments(data,ax) :
     for i in range (0,len(segments_right)) :
-        ax.plot(data.loc[:,segments_right[i]].loc['x',:],data.loc[:,segments_right[i]].loc['y',:],data.loc[:,segments_right[i]].loc['z',:], color="b")
+        ax.plot(data.loc[:,segments_right[i]].loc['x',:],data.loc[:,segments_right[i]].loc['y',:],data.loc[:,segments_right[i]].loc['z',:], color="w")
     for i in range (0,len(segments_left)) :
         ax.plot(data.loc[:,segments_left[i]].loc['x',:],data.loc[:,segments_left[i]].loc['y',:],data.loc[:,segments_left[i]].loc['z',:], color="r")
     for i in range (0,len(segments_axial)) :
@@ -90,7 +97,7 @@ def plot_head (data,ax,temps) :
     x_head = data.loc[:,'Head x'][temps]
     y_head = data.loc[:,'Head y'][temps]
     z_head = data.loc[:,'Head z'][temps]
-    ax.scatter(x_head,y_head,z_head,s=2500, marker='o', color="k")
+    ax.scatter(x_head,y_head,z_head,s=200, marker='o', color="r")
 
 
 # # Reading movement stairs data :
@@ -139,13 +146,16 @@ print(segments_axial)
 
 
 l=data.shape[0]
-for i in range (l) :
-    df= data_to_df (data, i)
+for i in range ( int(l/20) ) :
+    df= data_to_df (data, i*20)
     fig, ax = new_figure()
     plot_all_sensors_with_numbers(df,ax)
     plot_all_segments(df,ax)
     ax.view_init(0, -35)
     plot_head (data,ax,i)
-    s= str (i)
+    # ax.set_xlim3d([np.min(df.x), np.max(df.x)])
+    # ax.set_ylim3d([np.min(df.y), np.max(df.y)])
+    # ax.set_zlim3d([np.min(df.z), np.max(df.z)])
+    s= 'IMG/'+str (i)
     fig.savefig(s,dpi=500)
 
